@@ -7,7 +7,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = React.useState('');
 
   const handleLogin = () => {
-    if (username === 'user' && password === 'password') {
+    if (username === 'user' && password === '123') {
       navigation.navigate('Main');
     } else {
       Alert.alert('Error', 'Nombre de usuario o contraseña incorrectos');

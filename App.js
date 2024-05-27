@@ -8,6 +8,9 @@ import SplashScreen from './components/SplashScreen';
 import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import SettingsScreen from './components/SettingsScreen';
+import CartScreen from './components/CartScreen';
+import FavoriteScreen from './components/FavoriteScreen';
+import UserScreen from './components/UserScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -17,6 +20,9 @@ function MainTabs() {
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Cart" component={CartScreen}/>
+      <Tab.Screen name="Favorite" component={FavoriteScreen}/>
+      <Tab.Screen name="User" component={UserScreen} />
     </Tab.Navigator>
   );
 }

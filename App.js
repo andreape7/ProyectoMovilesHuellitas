@@ -5,41 +5,40 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './screens/Login';
 import Home from './screens/Home';
+import RegisterScreen from './screens/RegisterScreen';  // Importa la pantalla de registro
 
 export default function App() {
+  const Stack = createStackNavigator();
 
-  
-const Stack = createStackNavigator();
-
-function MyStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} 
-      options={{
-        title:"LOGIN",
-        headerTintColor:'white',
-        headerTitleAlign:"center",
-        headerStyle:{backgroundColor:"#525FE1"},
-      }} />
-      <Stack.Screen name="Home" component={Home} 
-            options={{
-              title:"HOME",
-              headerTintColor:'white',
-              headerTitleAlign:"center",
-              headerStyle:{backgroundColor:"#525FE1"},
-            }}
-       />
-      {/* <Stack.Screen name ="Search" component={Search}/>
-      <Stack.Screen name ="Cart" component={Cart}/>
-      <Stack.Screen name ="Favorite" component={Favorite}/>
-      <Stack.Screen name ="Pet Profile" component={PetProfile}/> */}
-      {/* <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Settings" component={Settings} /> */}
-    </Stack.Navigator>
-  );
-}
-
+  function MyStack() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="Login" component={Login} 
+          options={{
+            title:"LOGIN",
+            headerTintColor:'white',
+            headerTitleAlign:"center",
+            headerStyle:{backgroundColor:"#525FE1"},
+          }} />
+        <Stack.Screen name="Home" component={Home} 
+          options={{
+            title:"HOME",
+            headerTintColor:'white',
+            headerTitleAlign:"center",
+            headerStyle:{backgroundColor:"#525FE1"},
+          }}
+        />
+        <Stack.Screen name="Register" component={RegisterScreen}   // Añade la pantalla de registro
+          options={{
+            title:"REGISTER",
+            headerTintColor:'white',
+            headerTitleAlign:"center",
+            headerStyle:{backgroundColor:"#525FE1"},
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
 
   return (
     <NavigationContainer>

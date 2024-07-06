@@ -1,7 +1,26 @@
 import React, { useState } from 'react'
-import { Text, StyleSheet, View,Image,TextInput,TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View,Image,TextInput,TouchableOpacity,Alert } from 'react-native'
 
-export default function Login() {
+import appFirebase from '../credenciales'
+import { getAuth,signInWithEmailAndPassword } from 'firebase/auth'
+const auth =getAuth(appFirebase)
+
+export default function Login(props) {
+
+    //Creacion de la variable de estado
+    const [email,setEmail] = useState()
+    const [password,setPassword]=useState()
+    
+    //Creacion de funcion logeo
+    const logueo=async()=>{
+        try {
+            await signInWithEmailAndPassword(auth,email,password)
+            Alert.alert('Iniciando Sesion','Accediendo.....')
+            props.navigation.navigate('Home')
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <View style={styles.padre}>
@@ -10,13 +29,16 @@ export default function Login() {
             </View>
             <View style={styles.tarjeta}>
                 <View style={styles.cajaTexto}>
-                    <TextInput placeholder='correo@gmail.com' style={{paddingHorizontal:15}}/>
+                    <TextInput placeholder='correo@gmail.com' style={{paddingHorizontal:15}}
+                    onChangeText={(text)=>setEmail(text)}
+                    />
                 </View>
                 <View style={styles.cajaTexto}>
-                    <TextInput placeholder='password' style={{paddingHorizontal:15}}/>
+                    <TextInput placeholder='password' style={{paddingHorizontal:15}} secureTextEntry={true}
+                    onChangeText={(text)=>setPassword(text)} />
                 </View>
                 <View style={styles.PadreBoton}>
-                    <TouchableOpacity style={styles.cajaBoton}>
+                    <TouchableOpacity style={styles.cajaBoton} onPress={logueo}>
                         <Text style={styles.TextoBoton}>Sign In</Text>
                     </TouchableOpacity>
                 </View>

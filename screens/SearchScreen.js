@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProductItem from '../components/ProductItem';
 import { PRODUCTS } from '../data/dummy-data';
@@ -8,30 +9,43 @@ import { PRODUCTS } from '../data/dummy-data';
 const SearchScreen = () => {
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
+  const dispatch = useDispatch();
 
-  const filteredProducts = PRODUCTS.filter(product =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', product: { ...product, quantity: 1 } });
+  };
+
+  const addToFavorites = (product) => {
+    dispatch({ type: 'ADD_TO_FAVORITES', product });
+  };
+
+  const filteredProducts = searchTerm
+    ? PRODUCTS.filter(product => product.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    : PRODUCTS;
 
   const renderProductItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}>
-        <ProductItem title={item.title} imageUrl={item.imageUrl} price={item.price} />
-      </TouchableOpacity>
+      <ProductItem
+        title={item.title}
+        imageUrl={item.imageUrl}
+        price={item.price}
+        onAddToCart={() => addToCart(item)}
+        onAddToFavorites={() => addToFavorites(item)}
+      />
     );
   };
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.header}>Buscar Productos</Text>
-      <View style={styles.searchContainer}>
+      <View style={styles.searchBarContainer}>
+        <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
-          placeholder="Buscar..."
+          style={styles.searchBar}
+          placeholder="Buscar productos..."
           value={searchTerm}
-          onChangeText={(text) => setSearchTerm(text)}
+          onChangeText={text => setSearchTerm(text)}
+          placeholderTextColor="#888"
         />
-        <Icon name="ios-search" size={24} color="#333" style={styles.searchIcon} />
       </View>
       <FlatList
         data={filteredProducts}
@@ -48,26 +62,23 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f7f7',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    color: '#333',
-  },
-  searchContainer: {
+  searchBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+    borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 8,
+    marginBottom: 20,
     paddingHorizontal: 10,
-    marginVertical: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
   },
   searchIcon: {
-    marginLeft: 10,
+    marginRight: 10,
+  },
+  searchBar: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    color: '#333',
   },
 });
 

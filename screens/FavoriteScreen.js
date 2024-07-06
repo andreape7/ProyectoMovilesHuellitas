@@ -1,29 +1,46 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux'; 
-import ProductItem from '../components/ProductItem'; 
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Button } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 
 const FavoriteScreen = () => {
-  const favoriteItems = useSelector(state => state.favoriteItems);
+  const favoriteItems = useSelector((state) => state.favorites);
+  const dispatch = useDispatch();
 
-  const renderFavoriteItem = ({ item }) => {
+  const removeFromFavorites = (productId) => {
+    dispatch({ type: 'REMOVE_FROM_FAVORITES', productId });
+  };
+
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', product: { ...product, quantity: 1 } });
+  };
+
+  const renderProductItem = ({ item }) => {
     return (
-      <ProductItem title={item.title} imageUrl={item.imageUrl} price={item.price} />
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => console.log('Pressed:', item.title)} // Placeholder for navigation or action
+      >
+        <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        <View style={styles.details}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.price}>S/. {item.price}</Text>
+          <View style={styles.buttonContainer}>
+            <Button title="Añadir al Carrito" onPress={() => addToCart(item)} />
+            <Button title="Eliminar" onPress={() => removeFromFavorites(item.id)} />
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.header}>Favoritos</Text>
-      {favoriteItems.length > 0 ? (
-        <FlatList
-          data={favoriteItems}
-          renderItem={renderFavoriteItem}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      ) : (
-        <Text style={styles.emptyText}>No hay productos en favoritos.</Text>
-      )}
+      <FlatList
+        data={favoriteItems}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderProductItem}
+        ListEmptyComponent={() => <Text style={styles.emptyText}>No hay artículos en favoritos.</Text>}
+      />
     </View>
   );
 };
@@ -34,17 +51,41 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f7f7',
   },
-  header: {
-    fontSize: 24,
+  item: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 3,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  details: {
+    flex: 1,
+    padding: 10,
+  },
+  title: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 10,
-    color: '#333',
+  },
+  price: {
+    fontSize: 16,
+    color: '#888',
+    marginTop: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
   emptyText: {
-    fontSize: 18,
-    textAlign: 'center',
+    alignSelf: 'center',
     marginTop: 20,
-    color: '#666',
+    fontSize: 16,
+    color: '#888',
   },
 });
 

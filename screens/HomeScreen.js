@@ -1,53 +1,73 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Picker } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import ProductItem from '../components/ProductItem';
 import { CATEGORIES, PRODUCTS } from '../data/dummy-data';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState(null); // Estado para la categoría seleccionada
+
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', product: { ...product, quantity: 1 } });
+  };
+
+  const addToFavorites = (product) => {
+    dispatch({ type: 'ADD_TO_FAVORITES', product });
+  };
 
   const renderProductItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}>
-        <ProductItem title={item.title} imageUrl={item.imageUrl} price={item.price} />
-      </TouchableOpacity>
+      <ProductItem
+        title={item.title}
+        imageUrl={item.imageUrl}
+        price={item.price}
+        onAddToCart={() => addToCart(item)}
+        onAddToFavorites={() => addToFavorites(item)}
+      />
     );
   };
 
+  // Filtrar productos por categoría seleccionada
   const filteredProducts = selectedCategory
     ? PRODUCTS.filter(product => product.categoryIds.includes(selectedCategory))
     : PRODUCTS;
 
-  const selectedCategoryLabel = selectedCategory
-    ? CATEGORIES.find(cat => cat.id === selectedCategory).title
-    : 'Todas';
+  // Función para manejar el cambio de categoría seleccionada
+  const handleCategoryPress = (categoryId) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId); // Alternar la categoría seleccionada
+  };
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.header}>Categorías</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedCategory}
-          onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-          style={styles.picker}
-        >
-          {selectedCategory === '' && <Picker.Item label="Seleccionar" value="" />}
-          {CATEGORIES.map((category) => (
-            <Picker.Item key={category.id} label={category.title} value={category.id} />
-          ))}
-        </Picker>
+      <View style={styles.categoryContainer}>
+        <Text style={styles.header}>Categorías</Text>
+        <FlatList
+          data={CATEGORIES}
+          horizontal
+          contentContainerStyle={styles.categoryList}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.category, selectedCategory === item.id && styles.selectedCategory]}
+              onPress={() => handleCategoryPress(item.id)}
+            >
+              <Text style={[styles.categoryTitle, selectedCategory === item.id && styles.selectedCategoryText]}>{item.title}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
       </View>
-      <Text style={styles.header}>Productos</Text>
-      <Text style={styles.categoryLabel}>
-        Categoría: <Text style={styles.selectedCategory}>{selectedCategoryLabel}</Text>
-      </Text>
-      <FlatList
-        data={filteredProducts}
-        renderItem={renderProductItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      <View style={styles.productContainer}>
+        <Text style={styles.header}>Productos Destacados</Text>
+        <FlatList
+          data={filteredProducts}
+          renderItem={renderProductItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </View>
     </View>
   );
 };
@@ -58,29 +78,40 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f7f7',
   },
+  categoryContainer: {
+    marginBottom: 20,
+  },
+  productContainer: {
+    flex: 1,
+  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginBottom: 10,
     color: '#333',
   },
-  pickerContainer: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
-    marginVertical: 10,
-    padding: 10,
+  categoryList: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
-  picker: {
-    height: 50,
-    width: '100%',
+  category: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginRight: 10,
+    elevation: 3,
   },
-  categoryLabel: {
+  categoryTitle: {
     fontSize: 16,
-    marginVertical: 10,
-    color: '#555',
+    fontWeight: 'bold',
+    color: '#333',
   },
   selectedCategory: {
-    fontWeight: 'bold',
+    backgroundColor: 'skyblue', // Color de fondo cuando la categoría está seleccionada
+  },
+  selectedCategoryText: {
+    color: '#fff', // Color del texto cuando la categoría está seleccionada
   },
 });
 

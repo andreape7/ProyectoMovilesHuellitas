@@ -8,11 +8,41 @@ const UserScreen = () => {
   const [breed, setBreed] = useState('');
   const [sex, setSex] = useState('Macho');
   const [weight, setWeight] = useState('');
+  const [ownerName, setOwnerName] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
 
   const dogBreeds = ['Labrador', 'Poodle', 'Bulldog'];
   const catBreeds = ['Siamese', 'Persian', 'Maine Coon'];
 
   const breeds = petType === 'Perro' ? dogBreeds : catBreeds;
+
+  const handleRegister = () => {
+    // Aquí puedes implementar la lógica para registrar los datos, por ejemplo, enviar a una API.
+    console.log('Registrando datos:', {
+      petType,
+      name,
+      breed,
+      sex,
+      weight,
+      ownerName,
+      ownerEmail,
+    });
+    // Aquí puedes reiniciar los estados o realizar cualquier acción posterior al registro.
+  };
+
+  const handleUpdate = () => {
+    // Aquí puedes implementar la lógica para actualizar los datos, por ejemplo, enviar a una API.
+    console.log('Actualizando datos:', {
+      petType,
+      name,
+      breed,
+      sex,
+      weight,
+      ownerName,
+      ownerEmail,
+    });
+    // Aquí puedes reiniciar los estados o realizar cualquier acción posterior a la actualización.
+  };
 
   return (
     <View style={styles.container}>
@@ -80,6 +110,32 @@ const UserScreen = () => {
         onChangeText={setWeight}
         keyboardType="numeric"
       />
+
+      <Text style={styles.ownerTitle}>DATOS DEL DUEÑO</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre del Dueño*"
+        value={ownerName}
+        onChangeText={setOwnerName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Correo Electrónico del Dueño*"
+        value={ownerEmail}
+        onChangeText={setOwnerEmail}
+        keyboardType="email-address"
+      />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Registrar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+          <Text style={styles.buttonText}>Actualizar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -143,6 +199,29 @@ const styles = StyleSheet.create({
   picker: {
     flex: 1,
     height: 40,
+  },
+  ownerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  button: {
+    backgroundColor: '#e91e63',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

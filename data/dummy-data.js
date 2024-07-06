@@ -21,8 +21,7 @@ export const PRODUCTS = [
     [
       'Carne de pollo',
       'Arroz',
-      'Vitaminas',
-      'Minerales'
+      'Vitaminas'
     ],
     [
       'Proveer 2 tazas al día para perros medianos.',

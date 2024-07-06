@@ -21,7 +21,14 @@ function MyStack() {
         headerTitleAlign:"center",
         headerStyle:{backgroundColor:"#525FE1"},
       }} />
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={Home} 
+            options={{
+              title:"HOME",
+              headerTintColor:'white',
+              headerTitleAlign:"center",
+              headerStyle:{backgroundColor:"#525FE1"},
+            }}
+       />
       {/* <Stack.Screen name ="Search" component={Search}/>
       <Stack.Screen name ="Cart" component={Cart}/>
       <Stack.Screen name ="Favorite" component={Favorite}/>

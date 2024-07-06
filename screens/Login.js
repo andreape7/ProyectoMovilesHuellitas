@@ -18,7 +18,8 @@ export default function Login(props) {
             Alert.alert('Iniciando Sesion','Accediendo.....')
             props.navigation.navigate('Home')
         } catch (error) {
-            
+            console.log(error)
+            Alert.alert('Error','El usuario o contraseña son incorrectos.')
         }
     }
 
